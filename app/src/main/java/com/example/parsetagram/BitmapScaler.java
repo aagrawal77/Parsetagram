@@ -2,7 +2,7 @@ package com.example.parsetagram;
 
 import android.graphics.Bitmap;
 
-class BitmapScaler {
+public class BitmapScaler {
     // scale and keep aspect ratio
     public static Bitmap scaleToFitWidth(Bitmap b, int width)
     {
