@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.parsetagram.PostAdapter;
 import com.example.parsetagram.R;
@@ -22,11 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PostsFragment extends Fragment {
+    private SwipeRefreshLayout swipeContainer;
 
     public static final String TAG = "PostsFragment";
     private RecyclerView rvPosts;
-    private PostAdapter adapter;
-    private List<Post> mPosts;
+    protected PostAdapter adapter;
+    protected List<Post> mPosts;
 
     @Nullable
     @Override
@@ -42,12 +45,36 @@ public class PostsFragment extends Fragment {
        rvPosts.setAdapter(adapter);
        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
 
-       queryPosts();
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                fetchTimelineAsync(0);
+            }
+        });
+
+        // adds divider between tweets
+        rvPosts.addItemDecoration(new DividerItemDecoration(rvPosts.getContext(), DividerItemDecoration.VERTICAL));
+        queryPosts();
     }
 
-    private void queryPosts() {
+    public void fetchTimelineAsync(int page) {
+        mPosts.clear();
+        adapter.clear();
+        queryPosts();
+        swipeContainer.setRefreshing(false);
+    }
+
+
+    protected void queryPosts() {
         ParseQuery<Post> postQuery = new ParseQuery<Post>(Post.class);
         postQuery.include(Post.KEY_USER);
+        postQuery.setLimit(20);
+        postQuery.addDescendingOrder(Post.KEY_CREATED_AT);
         postQuery.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> objects, ParseException e) {

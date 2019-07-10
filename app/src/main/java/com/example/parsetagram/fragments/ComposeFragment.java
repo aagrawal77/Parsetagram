@@ -183,7 +183,8 @@ public class ComposeFragment extends Fragment {
             public void done(ParseException e) {
                 Log.d("homeActivity", "inside done");
                 if (e == null) {
-                    Toast.makeText(getContext(), "Posted successfully!", Toast.LENGTH_LONG).show();
+                    Log.d("XYZ", "we chillin");
+//                    Toast.makeText(getContext(), "Posted successfully!", Toast.LENGTH_LONG).show();
                 } else {
                     e.printStackTrace();
                 }
