@@ -3,25 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    tools:context=".PostDetailsActivity">
 
     <TextView
         android:id="@+id/tvHandle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="276dp"
-        android:layout_marginRight="276dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="sans-serif"
         android:text="TextView"
         android:textAllCaps="false"
         android:textColor="@android:color/black"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -30,9 +26,8 @@
         android:layout_height="300dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivProfileImage"
+        app:layout_constraintTop_toBottomOf="@+id/tvHandle"
         app:srcCompat="@android:color/darker_gray" />
 
     <TextView
@@ -89,21 +84,6 @@
         app:layout_constraintTop_toBottomOf="@+id/image"
         app:srcCompat="@drawable/direct" />
 
-    <ImageButton
-        android:id="@+id/imageButton4"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:adjustViewBounds="true"
-        android:background="@null"
-        android:scaleType="fitCenter"
-        android:tint="@android:color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image"
-        app:srcCompat="@drawable/ufi_save" />
-
     <TextView
         android:id="@+id/tvDate"
         android:layout_width="wrap_content"
@@ -113,16 +93,5 @@
         android:text="TextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
-
-    <ImageView
-        android:id="@+id/ivProfileImage"
-        android:layout_width="43dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/instagram_user_filled_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
