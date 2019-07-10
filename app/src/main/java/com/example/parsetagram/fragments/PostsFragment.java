@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.parsetagram.EndlessRecyclerViewScrollListener;
 import com.example.parsetagram.PostAdapter;
 import com.example.parsetagram.R;
 import com.example.parsetagram.models.Post;
@@ -21,15 +22,19 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PostsFragment extends Fragment {
     private SwipeRefreshLayout swipeContainer;
 
     public static final String TAG = "PostsFragment";
+    public Date earliest_date;
     private RecyclerView rvPosts;
+    private EndlessRecyclerViewScrollListener scrollListener;
     protected PostAdapter adapter;
     protected List<Post> mPosts;
+
 
     @Nullable
     @Override
@@ -43,7 +48,8 @@ public class PostsFragment extends Fragment {
        mPosts = new ArrayList<>();
        adapter = new PostAdapter(getContext(), mPosts);
        rvPosts.setAdapter(adapter);
-       rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+       LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+       rvPosts.setLayoutManager(linearLayoutManager);
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
@@ -57,9 +63,42 @@ public class PostsFragment extends Fragment {
             }
         });
 
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadNextDataFromApi(page);
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvPosts.addOnScrollListener(scrollListener);
+
         // adds divider between tweets
         rvPosts.addItemDecoration(new DividerItemDecoration(rvPosts.getContext(), DividerItemDecoration.VERTICAL));
         queryPosts();
+    }
+
+    // Append the next page of data into the adapter
+    // This method probably sends out a network request and appends new data items to your adapter.
+    public void loadNextDataFromApi(int offset) {
+        ParseQuery<Post> postQuery = new ParseQuery<Post>(Post.class);
+        postQuery.include(Post.KEY_USER);
+        postQuery.setLimit(20);
+        postQuery.whereLessThan(Post.KEY_CREATED_AT, earliest_date);
+        postQuery.addDescendingOrder(Post.KEY_CREATED_AT);
+        postQuery.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> objects, ParseException e) {
+                if (e != null) {
+                    e.printStackTrace();
+                    return;
+                }
+                mPosts.addAll(objects);
+                adapter.notifyDataSetChanged();
+                earliest_date = mPosts.get(mPosts.size() - 1).getCreatedAt();
+            }
+        });
     }
 
     public void fetchTimelineAsync(int page) {
@@ -84,6 +123,7 @@ public class PostsFragment extends Fragment {
                 }
                 mPosts.addAll(objects);
                 adapter.notifyDataSetChanged();
+                earliest_date = mPosts.get(mPosts.size() - 1).getCreatedAt();
             }
         });
     }
