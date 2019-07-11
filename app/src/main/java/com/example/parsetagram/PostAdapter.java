@@ -3,20 +3,26 @@ package com.example.parsetagram;
 import android.content.Context;
 import android.content.Intent;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.parsetagram.models.Post;
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
@@ -76,6 +82,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         public TextView description;
         public TextView tvHandle;
         public TextView tvDate;
+        public ImageButton btnLike;
+        public Post post;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -85,8 +93,48 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             description = (TextView) itemView.findViewById(R.id.tvDescription);
             tvHandle = (TextView) itemView.findViewById(R.id.tvHandle);
             tvDate = (TextView) itemView.findViewById(R.id.tvDate);
+            btnLike = (ImageButton) itemView.findViewById(R.id.btnHeart);
 
             itemView.setOnClickListener(this);
+
+            btnLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    post = posts.get(position);
+                    if (post.likedByCurrentUser()) {
+                        List liked = post.getList("likedBy");
+                        liked.remove(ParseUser.getCurrentUser().getUsername());
+                        post.put("likedBy", liked);
+                        post.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e == null) {
+                                    Log.d("XYZ", "we chillin");
+                                } else {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        notifyItemChanged(position);
+                    } else {
+                        List liked = post.getList("likedBy");
+                        liked.add(ParseUser.getCurrentUser().getUsername());
+                        post.put("likedBy", liked);
+                        post.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e == null) {
+                                    Log.d("XYZ", "we chillin");
+                                } else {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        notifyItemChanged(position);
+                    }
+                }
+            });
 
         }
 
@@ -102,6 +150,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             }
             description.setText(post.getDescription());
             tvDate.setText(getRelativeTimeAgo(post.getDate()));
+
+            if (post.likedByCurrentUser()) {
+                btnLike.setImageResource(R.drawable.ufi_heart_active);
+                btnLike.setColorFilter(ContextCompat.getColor(context, R.color.red_6));
+            } else {
+                btnLike.setImageResource(R.drawable.ufi_heart);
+                btnLike.setColorFilter(ContextCompat.getColor(context, R.color.black));
+            }
         }
 
         @Override

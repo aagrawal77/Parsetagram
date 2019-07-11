@@ -1,6 +1,7 @@
 package com.example.parsetagram.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,14 +27,14 @@ import java.util.Date;
 import java.util.List;
 
 public class PostsFragment extends Fragment {
-    private SwipeRefreshLayout swipeContainer;
 
     public static final String TAG = "PostsFragment";
     public Date earliest_date;
-    private RecyclerView rvPosts;
-    private EndlessRecyclerViewScrollListener scrollListener;
+    protected RecyclerView rvPosts;
+    protected EndlessRecyclerViewScrollListener scrollListener;
     protected PostAdapter adapter;
     protected List<Post> mPosts;
+    protected SwipeRefreshLayout swipeContainer;
 
 
     @Nullable
@@ -82,6 +83,7 @@ public class PostsFragment extends Fragment {
     // Append the next page of data into the adapter
     // This method probably sends out a network request and appends new data items to your adapter.
     public void loadNextDataFromApi(int offset) {
+        Log.d("YEE", "ENTERED");
         ParseQuery<Post> postQuery = new ParseQuery<Post>(Post.class);
         postQuery.include(Post.KEY_USER);
         postQuery.setLimit(20);

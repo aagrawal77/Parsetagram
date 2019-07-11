@@ -8,6 +8,7 @@ import com.parse.ParseUser;
 
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 @Parcel(analyze = Post.class)
@@ -17,9 +18,22 @@ public class Post extends ParseObject {
     public static final String KEY_IMAGE = "image";
     public static final String KEY_USER = "user";
     public static final String KEY_CREATED_AT = "createdAt";
+    public static final String KEY_LIKED_BY = "likedBy";
 
     public Post() {
 
+    }
+
+    public boolean likedByCurrentUser() {
+        if (getList(KEY_LIKED_BY) == null) {
+            setLikedBy();
+            return false;
+        }
+        return getList(KEY_LIKED_BY).contains(ParseUser.getCurrentUser().getUsername());
+    }
+
+    public void setLikedBy() {
+        put(KEY_LIKED_BY, new ArrayList<String>());
     }
 
     public Date getDate() {
