@@ -3,14 +3,12 @@ package com.example.parsetagram;
 import android.content.Context;
 import android.content.Intent;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -109,11 +107,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                         post.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
-                                if (e == null) {
-                                    Log.d("XYZ", "we chillin");
-                                } else {
-                                    e.printStackTrace();
-                                }
                             }
                         });
                         notifyItemChanged(position);
@@ -124,11 +117,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                         post.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
-                                if (e == null) {
-                                    Log.d("XYZ", "we chillin");
-                                } else {
-                                    e.printStackTrace();
-                                }
                             }
                         });
                         notifyItemChanged(position);
@@ -163,7 +151,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-            Toast.makeText(context, "Clicked!", Toast.LENGTH_LONG).show();
             if (position != RecyclerView.NO_POSITION) {
                 Post post = posts.get(position);
                 Intent intent = new Intent(context, PostDetailsActivity.class);

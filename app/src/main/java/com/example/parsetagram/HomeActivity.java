@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -26,7 +26,7 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private Button logoutButton;
+    private ImageButton logoutButton;
     public BottomNavigationView bottom_navigation;
 
 
@@ -38,6 +38,9 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
+//        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff")));
+//        actionBar.setDisplayShowTitleEnabled(false);
+//        actionBar.setLogo(R.drawable.nav_logo_whiteout);
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
